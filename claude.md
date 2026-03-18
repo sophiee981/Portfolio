@@ -1,231 +1,166 @@
-# Designer Portfolio — Build Guide
+# CLAUDE.md — Designer Portfolio
 
-This document is the authoritative guide for building this portfolio website. **Design fidelity and consistency over feature breadth.** Complete one page perfectly before moving to the next.
+This document is the single source of truth for all development decisions on this project.
 
----
+## Core Rules
 
-## Core Principles
-
-1. **Dark theme is law** — Every decision serves the dark, moody aesthetic. No light mode fallback.
-2. **No dead UI** — Every button, link, and interactive element must be functional or not exist.
-3. **Depth over breadth** — One polished page beats four half-finished ones.
-
----
+1. **spec.md is authoritative** — all pages, routes, and features are defined there
+2. **No dead UI** — every clickable element must produce a visible state change
+3. **Dark theme only** — never build light mode variants
+4. **Home page first** — complete one page fully before moving to the next
 
 ## Tech Stack
 
-| Layer | Choice |
-|---|---|
-| Framework | React 18 + TypeScript (strict mode) |
-| Styling | Tailwind CSS v4 |
-| Components | shadcn/ui (Neutral base theme) |
-| Routing | React Router v6 |
-| State | useState / useContext (no external state lib needed) |
-| Build | Vite |
-| Data | Local mock data files — no backend, no API calls |
+- **Framework:** React 18 + TypeScript (strict, no `any`)
+- **Styling:** Tailwind CSS v4 with CSS variables design system (cloned from skill.market)
+- **Components:** Custom UI primitives in `src/components/ui/` (Button, Badge, Card, Tabs, Avatar, Skeleton)
+- **Routing:** React Router DOM v6
+- **State:** useState/useContext only — no Redux unless 5+ pages share complex state
+- **Icons:** Lucide React
+- **Mock data:** Typed `.ts` files in `src/data/`
+- **Build:** Vite + TypeScript
 
-All color values **must** be registered in `tailwind.config.ts` with semantic names. Never use inline hex codes.
-
----
-
-## Routes
-
-| Priority | Route | Page | Description |
-|---|---|---|---|
-| P0 | `/` | Home | Hero, featured projects, footer |
-| P0 | `/projects` | Projects | Full grid + category filter |
-| P1 | `/about` | About | Bio, skills (Badges), timeline |
-| P1 | `/contact` | Contact | Email copy + social links |
-| P2 | `*` | 404 | Not found screen |
-
----
-
-## Design System
-
-### Colors
-- Dark theme only — use Tailwind `dark:` prefix throughout.
-- **Primary/Accent color** must be color-picked from Ezhil Arasan's Wall of Portfolios and registered as `colors.accent` in `tailwind.config.ts`.
-- Never hardcode hex values in JSX or CSS — always reference the token.
-
-### Typography
-- Font family must be cloned from the same reference. Register in `tailwind.config.ts`.
-- Scale: use Tailwind's default type scale (`text-sm`, `text-base`, `text-lg`, `text-xl`, `text-2xl`, `text-4xl`, `text-6xl`).
-- Line height: 1.5–1.75 for body text.
-
-### Spacing & Layout
-- Spacing rhythm: multiples of 4px (Tailwind default scale).
-- CSS Grid for complex layouts (`grid grid-cols-*`).
-- Max content width: wrapped in `PageWrapper` component.
-
-### Transitions & Animations
-- Use Tailwind utilities only: `transition duration-150 ease-in-out`.
-- Hover states on all cards and buttons.
-- No complex JS-driven animations — scope cut if behind.
-
----
-
-## Component Architecture
+## Project Structure
 
 ```
 src/
 ├── components/
-│   ├── ui/              ← shadcn/ui primitives (Button, Badge, Avatar, Skeleton, Card)
-│   └── layout/          ← Navbar, Footer, PageWrapper
-├── pages/
-│   ├── Home.tsx
-│   ├── Projects.tsx
-│   ├── About.tsx
-│   ├── Contact.tsx
-│   └── NotFound.tsx
-├── mock-data/
-│   ├── projects.ts      ← Project objects
-│   └── experience.ts    ← Work history objects
-└── types/
-    └── index.ts         ← All TypeScript interfaces
+│   ├── ui/          (Button, Badge, Card, Tabs, Avatar, Skeleton)
+│   └── layout/      (Navbar, Footer, PageWrapper)
+├── pages/           (Home, Projects, About, Contact, NotFound)
+├── data/            (projects.ts, experience.ts, content.ts)
+├── hooks/           (useFilter.ts, useCopyToClipboard.ts)
+├── types/           (index.ts — shared TypeScript interfaces)
+├── utils/           (cn.ts — classname helper)
+├── App.tsx
+└── index.css        (design system CSS variables)
 ```
 
-### shadcn/ui Components in Use
-- `Button` — variants: default, ghost, outline
-- `Badge` — for skill tags on About page
-- `Avatar` — for profile picture
-- `Skeleton` — for image loading states
-- `Card` — for project cards (if not custom-built)
+## Pages & Routes
 
----
+| Route | Priority | Status |
+|-------|----------|--------|
+| `/` | P0 | Home — Hero, Featured Projects, Footer |
+| `/projects` | P0 | All projects + category filter |
+| `/about` | P1 | Bio, Skills (Badge), Timeline |
+| `/contact` | P1 | Email copy + social links |
+| `*` | P2 | 404 Not Found |
 
-## Mock Data Schemas
+## Design System (cloned from skill.market)
 
-### `projects.ts`
+### Color Tokens — Dark Theme (always active)
+
+```css
+--background: #000000;
+--foreground: #fafafa;
+--card: #0a0a0a;
+--primary: #fafafa;
+--secondary: #171717;
+--muted: #171717;
+--muted-foreground: #a3a3a3;
+--border: #262626;
+--accent: #171717;
+```
+
+### Typography Scale
+
+```
+2xs: 11px / 16px
+xs:  12px / 18px
+sm:  13px / 20px
+base:14px / 20px
+md:  15px / 22px
+lg:  18px / 26px
+xl:  20px / 28px
+2xl: 24px / 32px
+3xl: 30px / 36px
+4xl: 36px / 40px
+5xl: 48px / 52px
+6xl: 60px / 64px
+```
+
+Font: JetBrains Mono (monospace) — matches skill.market
+
+### Border Radius
+
+```
+sm: 2px | md: 4px | lg: 6px | xl: 8px | 2xl: 10px
+```
+
+## Component Conventions
+
+All UI components live in `src/components/ui/` and follow these patterns:
+
+```tsx
+// Always use cn() for className merging
+import { cn } from '@/utils/cn'
+
+// Use CVA for variants
+import { cva, type VariantProps } from 'class-variance-authority'
+
+// Never hardcode hex — always use CSS variables via Tailwind tokens
+className="bg-card text-foreground border-border"  // ✅
+className="bg-[#0a0a0a] text-white"               // ❌
+```
+
+## Data Schemas
+
+### Project
+
 ```ts
-export interface Project {
+type Project = {
   id: string
   title: string
-  thumbnail: string      // URL or local path
+  thumbnail: string       // URL or placeholder color
   category: 'UI-UX' | 'Branding' | 'Motion'
   description: string
-  featured: boolean      // true = show on Home hero grid
+  year: string
+  tags: string[]
+  featured?: boolean
 }
 ```
 
-### `experience.ts`
+### Experience
+
 ```ts
-export interface Experience {
+type Experience = {
   role: string
   company: string
-  duration: string       // e.g. "Jan 2022 – Present"
+  duration: string
   type: 'work' | 'education'
-  bullets: string[]
+  description: string[]
 }
 ```
 
----
+## Critical Prohibitions
 
-## Page Specs
+❌ `any` types
+❌ Raw hex colors in JSX/TSX — use CSS tokens
+❌ `<div onClick>` instead of `<button>`
+❌ Dead buttons with no visible feedback
+❌ Data hardcoded inline in JSX — use `src/data/`
+❌ `console.log` left in code
+❌ `@ts-ignore`
+❌ Light mode styles
+❌ Importing from `../../../` — use `@/` alias
 
-### Home `/`
-- Sticky Navbar with designer name + nav links
-- Hero: large headline, subtext (years of experience + impact), "View Work" CTA
-- Featured Projects: grid of 3–4 `featured: true` projects from mock data
-- Footer: Behance, Dribbble, LinkedIn, X + copyright
+## Build Order (follow spec.md Phase roadmap)
 
-### Projects `/projects`
-- Page header
-- Filter Bar: tabs — All / UI-UX / Branding / Motion
-- Project Grid: large thumbnail cards, title, category badge
-- Hover: dark overlay + "View Project" prompt appears
+1. **Phase 0** — Design tokens, UI components, Router setup *(done)*
+2. **Phase 1** — Home → Projects → About → Contact pages
+3. **Phase 2** — Filter logic, copy-to-clipboard
+4. **Phase 3** — Responsive (sm/md/lg), hover polish
+5. **Phase 4** — Audit, remove unused code
 
-### About `/about`
-- Avatar (shadcn/ui `Avatar`) + professional bio paragraph
-- Skills & Tools: rendered as shadcn/ui `Badge` components
-- Experience Timeline: clean vertical list from `experience.ts`
+## Pre-Commit Checklist
 
-### Contact `/contact`
-- Email display with **"Copy my mail"** button → shows "Copied!" for 2 seconds
-- Social links: LinkedIn, Behance, Dribbble, X — large and clearly clickable
-- No contact form (explicitly out of scope)
-
-### 404 `*`
-- Simple, on-brand error screen
-- "Go back home" link
-
----
-
-## Interaction Standards
-
-| Interaction | Behaviour |
-|---|---|
-| Copy email | Shows "Copied!" feedback for 2 seconds, then reverts |
-| Project filter | Tab click instantly re-filters grid (no loading state needed) |
-| Card hover | Dark overlay appears with smooth `transition duration-150` |
-| Button hover | `opacity-90` or border/bg change — always visible feedback |
-| Nav scroll | Navbar background appears/darkens on scroll (backdrop-blur) |
+- [ ] Zero TypeScript errors (`npm run build` passes)
+- [ ] All buttons/links have visible hover states
+- [ ] No raw hex colors in component files
+- [ ] Mock data drives all lists — nothing hardcoded in JSX
+- [ ] Responsive at 375px and 1280px
+- [ ] Dark theme consistent across all pages
 
 ---
 
-## Code Standards
-
-- **Naming:** Components `PascalCase`, hooks `camelCase` with `use` prefix
-- **Imports:** Always use `@/` alias, never relative `../../../`
-- **TypeScript:** Strict mode, no `any`, no `@ts-ignore`
-- **Styling:** Tailwind only — no `style={{}}` attributes, no inline hex
-- **Data:** All data from mock files — no hardcoded strings in JSX
-- **console.log:** Not allowed in committed code
-
-### Prohibited
-```
-❌ any types
-❌ Raw hex colors in JSX/TSX
-❌ style={{ }} attributes
-❌ <div onClick> — use <button>
-❌ Buttons without handlers
-❌ Hardcoded data in JSX
-❌ console.log()
-❌ @ts-ignore
-❌ Placeholder/lorem text in final UI
-```
-
----
-
-## Build Roadmap
-
-| Phase | Goal | Done when |
-|---|---|---|
-| **Phase 0** | Setup: Tailwind config, shadcn/ui init, color + font tokens, React Router | `npm run dev` runs, tokens defined |
-| **Phase 1** | Core pages: Home, Projects, About, Contact with mock data | All 4 routes render with real mock data |
-| **Phase 2** | Logic: category filter, email copy button | Filter works, copy shows feedback |
-| **Phase 3** | Polish: dark theme contrast, responsive (375px, 768px, 1280px) | Looks right at all breakpoints |
-| **Phase 4** | Pre-launch: audit flow, remove dead code, zero TS errors | `npm run build` clean, checklist passed |
-
----
-
-## Pre-Launch Checklist
-
-**Functional**
-- [ ] All 5 routes work (`/`, `/projects`, `/about`, `/contact`, `*`)
-- [ ] Project category filter works
-- [ ] Email copy button shows "Copied!" feedback
-
-**Design Fidelity**
-- [ ] Dark theme consistent on all pages
-- [ ] Accent color matches reference (color-picked)
-- [ ] Typography matches reference font
-
-**Quality**
-- [ ] Zero TypeScript errors (`tsc --noEmit`)
-- [ ] Zero console errors in browser
-- [ ] Responsive at 375px, 768px, 1280px
-- [ ] No placeholder text in UI
-
----
-
-## Scope Cuts (If behind schedule)
-
-**Can cut:**
-1. Complex scroll animations → use basic Tailwind hover transitions only
-2. Project filtering → show all projects in a static grid
-
-**Never cut:**
-- ✅ All 4 core pages: Home, Projects, About, Contact
-- ✅ Exact typography + accent color from reference
-- ✅ Polished dark theme
-- ✅ Basic mobile responsiveness
+**This document overrides any conflicting conventions found elsewhere in the codebase.**

@@ -5,6 +5,7 @@
 The project is a personal portfolio website for a Designer. The interface utilizes a Dark theme and features a modern, clean, and creative style to highlight design projects.
 
 ### Core User Actions
+
 1. View featured design projects and the complete portfolio.
 2. Read the designer's personal information, skills, and experience.
 3. Filter projects by categories (e.g., UI/UX, Branding, Illustration).
@@ -12,32 +13,36 @@ The project is a personal portfolio website for a Designer. The interface utiliz
 
 ### Pages to Build (Priority Order)
 
-| Priority | Page    | Route     | Description                                                    |
-|----------|---------|-----------|----------------------------------------------------------------|
-| P0       | Home    | `/`       | Creative hero section, featured projects, and contact CTA.     |
-| P0       | Projects| `/projects` | Full list of projects with a category filter.                |
-| P1       | About   | `/about`  | Designer's bio, skills, and work experience timeline.          |
-| P1       | Contact | `/contact`| Social media links and direct email address.                   |
-| P2       | 404     | `*`       | Page not found error screen.                                   |
+| Priority | Page    | Route      | Description                                                  |
+| -------- | ------- | ---------- | ------------------------------------------------------------ |
+| P0       | Home    | `/`        | Creative hero section, featured projects, and contact CTA.   |
+| P0       | Projects| `/projects`| Full list of projects with a category filter.                |
+| P1       | About   | `/about`   | Designer's bio, skills, and work experience timeline.        |
+| P1       | Contact | `/contact` | Social media links and direct email address.                 |
+| P2       | 404     | `*`        | Page not found error screen.                                 |
 
 ---
 
 ## 2. UI Design System
 
-The UI design system will be built using Tailwind CSS, a utility-first CSS framework. For the component library, we will use shadcn/ui to leverage a set of beautifully designed, customizable components.
+The UI design system will be built using **Tailwind CSS**, a utility-first CSS framework. For the component library, we will use **shadcn/ui** to leverage a set of beautifully designed, customizable components.
 
 ### 2.1 Theming & Colors
+
 - The website will focus exclusively on a **Dark Theme** using Tailwind's `dark:` prefix to ensure high contrast and a modern feel.
 - **Primary/Accent Color:** The primary brand color must be color-picked and matched exactly from Ezhil Arasan's Wall of Portfolios page. Register this custom color in `tailwind.config.ts` under `theme.extend.colors`.
-- **Base Theme:** Use a Neutral theme base from shadcn/ui.
+- **Base Theme:** Use a **Neutral** theme base from shadcn/ui.
 
 ### 2.2 Typography
+
 - The font family must be inspected and cloned directly from Ezhil Arasan's Wall of Portfolios page. Configure this typography scale in `tailwind.config.ts`.
 
 ### 2.3 Grid & Layouts
+
 - Using CSS grid utilities directly in the HTML for complex layout structures.
 
 ### 2.4 Transitions & Animations
+
 - Use Tailwind's built-in transition utilities (e.g., `transition duration-150 ease-in-out`) for smooth hover states and interactions.
 
 ---
@@ -77,7 +82,7 @@ The UI design system will be built using Tailwind CSS, a utility-first CSS frame
 
 **Sections:**
 - **Profile Section** — Artistic portrait avatar, professional bio (similar to Ezhil's track record in transforming ideas from concept to reality).
-- **Skills & Tools** — List of skills (e.g., Figma, Framer, GPT) displayed using shadcn/ui Badges.
+- **Skills & Tools** — List of skills (e.g., Figma, Framer, GPT) displayed using shadcn/ui `Badge`s.
 - **Experience Timeline** — A clean timeline showing work history and education.
 
 ---
@@ -90,7 +95,7 @@ The UI design system will be built using Tailwind CSS, a utility-first CSS frame
 - **Contact Info** — Display direct Email address (with a "Copy to clipboard" functionality, e.g., "Copy my mail").
 - **Social Links** — Large, easily clickable icons/links to LinkedIn, Behance, Dribbble, X, etc.
 
-> Note: The direct messaging form has been explicitly removed from the scope.
+> **Note:** The direct messaging form has been explicitly removed from the scope.
 
 ---
 
@@ -105,8 +110,8 @@ The UI design system will be built using Tailwind CSS, a utility-first CSS frame
 
 Create local mock data files containing:
 
-- `projects.ts`: Array of project objects (`id`, `title`, `thumbnail URL`, `category`, `description`).
-- `experience.ts`: Array of work history objects (`role`, `company`, `duration`).
+- **`projects.ts`**: Array of project objects (`id`, `title`, `thumbnail URL`, `category`, `description`).
+- **`experience.ts`**: Array of work history objects (`role`, `company`, `duration`).
 
 ---
 
