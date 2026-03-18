@@ -12,6 +12,7 @@ export const profile = {
   linkedin: 'https://linkedin.com/in/yourname',
   behance: 'https://behance.net/yourname',
   dribbble: 'https://dribbble.com/yourname',
+  twitter: 'https://x.com/yourname',
   cvUrl: '/cv.pdf',
 }
 
@@ -86,6 +87,7 @@ export type CaseStudy = {
   tools: string[]
   tags: string[]
   coverColor: string // placeholder màu khi chưa có ảnh
+  featured?: boolean
   problem: string
   process: { phase: string; description: string }[]
   outcomes: { label: string; value: string }[]
@@ -103,6 +105,7 @@ export const caseStudies: CaseStudy[] = [
     tools: ['Figma', 'Maze', 'Miro'],
     tags: ['Mobile App', 'UX Research', 'Onboarding'],
     coverColor: '#1a0a2e',
+    featured: true,
     problem: 'Người dùng bỏ qua bước onboarding khiến activation rate thấp. Cần redesign để tăng tỷ lệ hoàn thành.',
     process: [
       { phase: 'Research', description: 'User interview 12 người, phân tích drop-off funnel, competitor analysis.' },
@@ -127,6 +130,7 @@ export const caseStudies: CaseStudy[] = [
     tools: ['Figma', 'Storybook', 'Notion'],
     tags: ['Design System', 'Web App', 'B2B'],
     coverColor: '#0a1a1a',
+    featured: true,
     problem: 'Thiếu nhất quán giữa các sản phẩm, mỗi team tự thiết kế dẫn đến UI không đồng bộ.',
     process: [
       { phase: 'Audit', description: 'Audit toàn bộ UI hiện tại, lập danh sách component.' },
@@ -151,6 +155,7 @@ export const caseStudies: CaseStudy[] = [
     tools: ['Figma', 'Hotjar', 'Lookback'],
     tags: ['Dashboard', 'Data Viz', 'B2B SaaS'],
     coverColor: '#0a0a1a',
+    featured: true,
     problem: 'Người dùng không hiểu data trên dashboard, dẫn đến không tận dụng được tính năng cao cấp.',
     process: [
       { phase: 'Research', description: 'Session recording, contextual inquiry với 6 power user.' },

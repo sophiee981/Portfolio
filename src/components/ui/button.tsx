@@ -18,7 +18,7 @@ const buttonVariants = cva(
         default: 'h-9 px-3',
         xs: 'h-6 rounded px-2 text-xs',
         sm: 'h-7 rounded-md px-2.5 text-[0.8rem]',
-        lg: 'h-10 px-4',
+        lg: 'h-11 px-6 text-base',
         icon: 'size-9',
         'icon-sm': 'size-7',
       },
@@ -32,16 +32,32 @@ const buttonVariants = cva(
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {}
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean
+}
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, ...props }, ref) => (
-    <button
-      ref={ref}
-      className={cn(buttonVariants({ variant, size, className }))}
-      {...props}
-    />
-  )
+  ({ className, variant, size, asChild = false, children, ...props }, ref) => {
+    // When asChild, clone the single child element and apply button styles to it
+    if (asChild && React.isValidElement(children)) {
+      return React.cloneElement(children as React.ReactElement<React.HTMLAttributes<HTMLElement>>, {
+        className: cn(
+          buttonVariants({ variant, size }),
+          (children as React.ReactElement<React.HTMLAttributes<HTMLElement>>).props.className,
+          className
+        ),
+      })
+    }
+    return (
+      <button
+        ref={ref}
+        className={cn(buttonVariants({ variant, size, className }))}
+        {...props}
+      >
+        {children}
+      </button>
+    )
+  }
 )
 Button.displayName = 'Button'
 

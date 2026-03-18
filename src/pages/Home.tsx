@@ -1,17 +1,11 @@
-import Hero from '../components/Hero'
-import About from '../components/About'
-import Timeline from '../components/Timeline'
-import Work from '../components/Work'
-import Contact from '../components/Contact'
+import Hero from '@/components/Hero'
+import FeaturedProjects from '@/components/FeaturedProjects'
 
 export default function Home() {
   return (
     <main>
       <Hero />
-      <Work />
-      <About />
-      <Timeline />
-      <Contact />
+      <FeaturedProjects />
     </main>
   )
 }

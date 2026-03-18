@@ -1,85 +1,115 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { profile } from '../data/content'
+import { Menu, X } from 'lucide-react'
+import { cn } from '@/utils/cn'
+import { profile } from '@/data/content'
 
 const navLinks = [
-  { label: 'Work', href: '/#work' },
-  { label: 'About', href: '/#about' },
-  { label: 'Timeline', href: '/#timeline' },
-  { label: 'Contact', href: '/#contact' },
+  { label: 'Home', to: '/' },
+  { label: 'Projects', to: '/projects' },
+  { label: 'About', to: '/about' },
+  { label: 'Contact', to: '/contact' },
 ]
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const location = useLocation()
-  const isHome = location.pathname === '/'
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
-    window.addEventListener('scroll', onScroll)
+    window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const handleNavClick = (href: string) => {
-    setMenuOpen(false)
-    if (href.startsWith('/#') && isHome) {
-      const id = href.slice(2)
-      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
-    }
-  }
+  // Close mobile menu on route change
+  useEffect(() => { setMenuOpen(false) }, [location.pathname])
+
+  const firstName = profile.name.split(' ')[0]
 
   return (
-    <header className={`navbar${scrolled ? ' navbar--scrolled' : ''}`}>
-      <div className="container navbar__inner">
-        {/* Logo */}
-        <Link to="/" className="navbar__logo">
-          {profile.name.split(' ')[0]}<span>.</span>
-        </Link>
+    <header
+      className={cn(
+        'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
+        scrolled
+          ? 'bg-background/80 backdrop-blur-md border-b border-border'
+          : 'bg-transparent'
+      )}
+    >
+      <div className="mx-auto max-w-5xl px-6 md:px-8">
+        <div className="flex h-16 items-center justify-between">
 
-        {/* Desktop Nav */}
-        <nav className="navbar__links">
-          {navLinks.map((link) => (
+          {/* Logo */}
+          <Link
+            to="/"
+            className="text-lg font-bold tracking-tight text-foreground hover:opacity-80 transition-opacity"
+          >
+            {firstName}
+            <span className="text-[var(--portfolio-accent)]">.</span>
+          </Link>
+
+          {/* Desktop nav */}
+          <nav className="hidden md:flex items-center gap-6">
+            {navLinks.map(({ label, to }) => (
+              <Link
+                key={label}
+                to={to}
+                className={cn(
+                  'text-sm font-medium transition-colors',
+                  location.pathname === to
+                    ? 'text-foreground'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
+              >
+                {label}
+              </Link>
+            ))}
             <a
-              key={link.label}
-              href={link.href}
-              className="navbar__link"
-              onClick={() => handleNavClick(link.href)}
+              href={profile.cvUrl}
+              download
+              className="text-sm font-semibold px-4 py-1.5 rounded-lg border border-border hover:border-[var(--portfolio-accent-border)] hover:bg-[var(--portfolio-accent-dim)] transition-all"
             >
-              {link.label}
+              CV
             </a>
-          ))}
-          <a href={profile.cvUrl} className="navbar__cv" download>
-            Download CV
-          </a>
-        </nav>
+          </nav>
 
-        {/* Mobile Hamburger */}
-        <button
-          className={`navbar__burger${menuOpen ? ' is-open' : ''}`}
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Toggle menu"
-        >
-          <span /><span /><span />
-        </button>
+          {/* Mobile hamburger */}
+          <button
+            className="md:hidden p-2 text-muted-foreground hover:text-foreground transition-colors"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Toggle menu"
+          >
+            {menuOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile menu */}
       {menuOpen && (
-        <div className="navbar__mobile">
-          {navLinks.map((link) => (
+        <div className="md:hidden border-t border-border bg-background/95 backdrop-blur-md">
+          <nav className="mx-auto max-w-5xl px-6 py-4 flex flex-col gap-1">
+            {navLinks.map(({ label, to }) => (
+              <Link
+                key={label}
+                to={to}
+                className={cn(
+                  'py-3 text-base font-medium border-b border-border/50 transition-colors',
+                  location.pathname === to
+                    ? 'text-foreground'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
+              >
+                {label}
+              </Link>
+            ))}
             <a
-              key={link.label}
-              href={link.href}
-              className="navbar__mobile-link"
-              onClick={() => handleNavClick(link.href)}
+              href={profile.cvUrl}
+              download
+              className="mt-3 text-sm font-semibold text-[var(--portfolio-accent)]"
             >
-              {link.label}
+              Download CV
             </a>
-          ))}
-          <a href={profile.cvUrl} className="navbar__mobile-cv" download>
-            Download CV
-          </a>
+          </nav>
         </div>
       )}
     </header>
