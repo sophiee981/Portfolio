@@ -7,6 +7,9 @@
    ───────────────────────────────────────────────────────── */
 
 @theme inline {
+  /* ── Font Family ── */
+  --font-sans: 'Host Grotesk', system-ui, sans-serif;
+
   /* ── Type Scale (11 levels) ── */
   --text-2xs: 11px;
   --text-2xs--line-height: 16px;
@@ -151,8 +154,9 @@
 
   html {
     scroll-behavior: smooth;
-    font-family: ui-monospace, 'JetBrains Mono', monospace;
+    font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   body {
