@@ -6,12 +6,12 @@ export default function Contact() {
       <div className="container">
         <p className="section-label">Contact</p>
         <h2 className="section-heading contact__heading">
-          Hãy cùng làm việc<br />
-          với nhau.
+          Let's work<br />
+          together.
         </h2>
         <p className="contact__desc">
-          Tôi đang mở cửa với các cơ hội full-time và freelance.
-          Đừng ngại liên hệ nếu bạn muốn hợp tác!
+          Open to full-time and freelance opportunities.
+          Don't hesitate to reach out — I'd love to collaborate!
         </p>
 
         <a href={`mailto:${profile.email}`} className="contact__email">

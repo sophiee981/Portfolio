@@ -1,74 +1,73 @@
-import { Link } from 'react-router-dom'
-import { ArrowRight } from 'lucide-react'
 import { timeline } from '@/data/content'
 
-// Chỉ show experience (work), tối đa 3 items
-const workItems = timeline.filter((t) => t.type === 'work').slice(0, 3)
+const workItems = timeline.filter((t) => t.type === 'work')
 
 export default function HomeExperience() {
   return (
-    <section
-      id="experience"
-      className="border-t border-border mx-auto max-w-5xl px-6 md:px-8 py-20"
-    >
-      {/* 2-column: label trái — timeline phải — theo wireframe */}
-      <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-10 md:gap-16">
+    <section id="experience" className="mx-auto max-w-6xl px-6 md:px-8 py-20">
 
-        {/* LEFT — label */}
-        <div className="flex flex-col gap-3 md:pt-1">
-          <p
-            className="text-xs font-semibold uppercase tracking-[0.15em]"
-            style={{ color: 'var(--portfolio-accent)' }}
+      {/* Huge uppercase heading — clone Ezhil style */}
+      <h2 className="text-5xl sm:text-6xl lg:text-8xl font-black uppercase text-foreground tracking-tight mb-10">
+        Experience
+      </h2>
+
+      {/* Experience cards */}
+      <div className="flex flex-col gap-3">
+        {workItems.map((item, i) => (
+          <div
+            key={i}
+            className="rounded-2xl border border-border p-6 md:p-8"
+            style={{ background: '#0d0d0d' }}
           >
-            Career
-          </p>
-          <h2 className="text-2xl font-extrabold tracking-tighter text-foreground leading-tight">
-            Experiences
-          </h2>
-          <Link
-            to="/about"
-            className="hidden md:inline-flex items-center gap-1 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors group mt-2"
-          >
-            Full timeline
-            <ArrowRight size={11} className="group-hover:translate-x-0.5 transition-transform" />
-          </Link>
-        </div>
-
-        {/* RIGHT — experience list */}
-        <div className="flex flex-col divide-y divide-border">
-          {workItems.map((item, i) => (
-            <div key={i} className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-6 py-5 first:pt-0">
-              {/* Period — monospace, muted */}
-              <span className="shrink-0 font-mono text-xs text-muted-foreground w-28">
-                {item.period}
-              </span>
-
-              {/* Role + Company */}
-              <div className="flex flex-col gap-0.5">
-                <p className="text-sm font-semibold text-foreground tracking-tight">
-                  {item.role}
-                </p>
-                <p
-                  className="text-xs font-medium"
-                  style={{ color: 'var(--portfolio-accent)' }}
-                >
-                  {item.company}
-                </p>
-              </div>
+            {/* Top: Company + Period */}
+            <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 mb-7">
+              <h3 className="text-xl md:text-2xl font-bold text-foreground tracking-tight">
+                {item.company}
+              </h3>
+              <span className="text-xs text-muted-foreground font-mono shrink-0">{item.period}</span>
             </div>
-          ))}
-        </div>
 
-      </div>
+            {/* 3-col: ROLE | KEY PROJECTS | SCOPE */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-10">
 
-      {/* Mobile "Full timeline" link */}
-      <div className="mt-8 flex md:hidden">
-        <Link
-          to="/about"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors"
-        >
-          Full timeline <ArrowRight size={11} />
-        </Link>
+              {/* ROLE */}
+              <div>
+                <p className="text-2xs font-semibold uppercase tracking-[0.12em] text-muted-foreground mb-3">
+                  Role
+                </p>
+                <p className="text-sm font-semibold text-foreground leading-snug">{item.role}</p>
+              </div>
+
+              {/* KEY PROJECTS */}
+              <div>
+                <p className="text-2xs font-semibold uppercase tracking-[0.12em] text-muted-foreground mb-3">
+                  Key Projects
+                </p>
+                <ul className="flex flex-col gap-2">
+                  {item.description.map((line, j) => (
+                    <li key={j} className="text-xs text-muted-foreground leading-relaxed">{line}</li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* SCOPE — use item.scope if available, else fallback */}
+              <div>
+                <p className="text-2xs font-semibold uppercase tracking-[0.12em] text-muted-foreground mb-3">
+                  Scope
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {((item as any).scope ?? ['UI Design', 'UX Research', 'Prototyping']).map((s: string) => (
+                    <span key={s}
+                      className="text-xs text-muted-foreground border border-border rounded-full px-2.5 py-1">
+                      {s}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+            </div>
+          </div>
+        ))}
       </div>
     </section>
   )

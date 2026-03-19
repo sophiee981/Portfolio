@@ -41,7 +41,7 @@ export default function CaseStudy() {
 
           {/* Cover image placeholder */}
           <div className="case-study__cover-placeholder">
-            {/* Thay bằng <img src="..." alt="..." /> khi có ảnh mockup */}
+            {/* Replace with <img src="..." alt="..." /> when mockup is ready */}
             <p>[ Cover mockup image ]</p>
           </div>
         </div>
@@ -115,8 +115,8 @@ export default function CaseStudy() {
             ))}
           </div>
           <p className="case-study__body" style={{ marginTop: '32px' }}>
-            {/* Thêm mô tả chi tiết về kết quả tại đây */}
-            Thêm mô tả về kết quả và học được gì từ project này.
+            {/* Add a detailed description of outcomes and key learnings here */}
+            Add a description of the results and what was learned from this project.
           </p>
         </section>
       </div>

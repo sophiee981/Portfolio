@@ -9,7 +9,7 @@ export default function About() {
           {/* Avatar */}
           <div className="about__avatar-wrap">
             <div className="about__avatar">
-              {/* Thay bằng <img src="..." alt="..." /> khi có ảnh thật */}
+              {/* Replace with <img src="..." alt="..." /> when real photo is available */}
               <span>{profile.name.charAt(0)}</span>
             </div>
             {/* Social links */}
@@ -35,9 +35,9 @@ export default function About() {
           {/* Text + Skills */}
           <div className="about__content">
             <h2 className="about__heading">
-              Xin chào, tôi là {profile.name.split(' ')[0]} —<br />
-              designer đam mê tạo ra<br />
-              những trải nghiệm có ý nghĩa.
+              Hey, I'm {profile.name.split(' ')[0]} —<br />
+              a designer passionate about creating<br />
+              experiences that truly matter.
             </h2>
             <p className="about__bio">{profile.bio}</p>
 

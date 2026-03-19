@@ -15,7 +15,7 @@ export default function Work() {
               to={`/case-study/${cs.id}`}
               className={`work-card${i === 0 ? ' work-card--featured' : ''}`}
             >
-              {/* Cover placeholder — thay bằng <img> khi có ảnh */}
+              {/* Cover placeholder — replace with <img> when image is ready */}
               <div
                 className="work-card__cover"
                 style={{ background: cs.coverColor }}

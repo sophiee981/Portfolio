@@ -1,91 +1,85 @@
-import { ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { Badge } from '@/components/ui/badge'
 import { caseStudies } from '@/data/content'
 
-// Show top 6 — đúng 2 hàng × 3 cột theo wireframe
-const projects = caseStudies.slice(0, 6)
+const featured = caseStudies.filter((cs) => cs.featured).slice(0, 3)
+
+const yearRange = (() => {
+  const years = featured.map((cs) => parseInt(cs.year))
+  const min = Math.min(...years).toString().slice(-2)
+  const max = Math.max(...years).toString().slice(-2)
+  return `${min}-${max}`
+})()
 
 export default function FeaturedProjects() {
   return (
-    <section id="work" className="mx-auto max-w-5xl px-6 md:px-8 pb-24">
+    <section id="work" className="mx-auto max-w-6xl px-6 md:px-8 py-20">
 
       {/* Section header */}
-      <div className="flex items-end justify-between mb-10">
-        <div>
-          <p
-            className="text-xs font-semibold uppercase tracking-[0.15em] mb-2"
-            style={{ color: 'var(--portfolio-accent)' }}
-          >
-            Portfolio
-          </p>
-          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tighter text-foreground">
-            My Projects
-          </h2>
-        </div>
-        <Link
-          to="/projects"
-          className="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors group"
-        >
-          View all
-          <ArrowRight size={13} className="group-hover:translate-x-0.5 transition-transform" />
-        </Link>
+      <div className="flex items-baseline justify-between mb-8">
+        <h2 className="text-sm font-medium text-foreground">Selected works</h2>
+        <span className="text-xs text-muted-foreground font-mono">{yearRange}</span>
       </div>
 
-      {/* 3-column uniform grid — từ wireframe */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {projects.map((cs) => (
+      {/* Stacked cards — light bg on dark page, clone Ezhil style */}
+      <div className="flex flex-col gap-4">
+        {featured.map((cs) => (
           <Link
             key={cs.id}
             to={`/case-study/${cs.id}`}
-            className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card hover:border-[var(--portfolio-accent-border)] transition-all duration-300 hover:-translate-y-1"
+            className="group relative flex flex-col md:flex-row rounded-2xl overflow-hidden transition-transform duration-300 hover:-translate-y-0.5"
+            style={{ background: '#f2f2f0' }}
           >
-            {/* Thumbnail */}
-            <div
-              className="relative h-44 flex items-center justify-center overflow-hidden shrink-0"
-              style={{ background: cs.coverColor }}
-            >
-              <span className="text-8xl font-extrabold tracking-tighter text-white/[0.06] select-none">
-                {cs.title.charAt(0)}
-              </span>
-              {/* Hover overlay */}
-              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
-                <span className="flex items-center gap-1.5 text-xs font-semibold text-white border border-white/30 rounded-full px-3 py-1.5">
-                  View Project <ArrowRight size={11} />
-                </span>
+            {/* LEFT: Info */}
+            <div className="flex flex-col justify-between p-8 md:p-10 md:w-[44%] shrink-0">
+              <div>
+                <p className="text-sm font-medium text-neutral-700 leading-relaxed mb-6 max-w-[280px]">
+                  {cs.subtitle}
+                </p>
+
+                {/* Tags */}
+                <div className="flex flex-wrap gap-2 mb-10">
+                  {cs.tags.map((tag) => (
+                    <span key={tag}
+                      className="text-xs font-medium text-neutral-500 border border-neutral-300 rounded-full px-3 py-1 bg-white/60">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
               </div>
+
+              {/* 2 key metrics */}
+              {cs.outcomes.length >= 2 && (
+                <div className="flex gap-10">
+                  {cs.outcomes.slice(0, 2).map((o) => (
+                    <div key={o.label}>
+                      <p className="text-2xl font-bold text-neutral-900 tracking-tight">{o.value}</p>
+                      <p className="text-xs text-neutral-400 mt-0.5 leading-snug max-w-[110px]">{o.label}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
-            {/* Info */}
-            <div className="flex flex-col gap-2 p-4">
-              <div className="flex flex-wrap gap-1">
-                {cs.tags.slice(0, 2).map((tag) => (
-                  <Badge
-                    key={tag}
-                    variant="outline"
-                    className="text-2xs border-[var(--portfolio-accent-border)] text-[var(--portfolio-accent)] bg-[var(--portfolio-accent-dim)] px-2 py-0"
-                  >
-                    {tag}
-                  </Badge>
-                ))}
+            {/* RIGHT: Cover/mockup */}
+            <div className="relative flex-1 min-h-[240px] md:min-h-[280px] overflow-hidden">
+              {/* Gradient bg */}
+              <div className="absolute inset-0 rounded-r-2xl"
+                style={{ background: `linear-gradient(145deg, ${cs.coverColor} 0%, #101014 100%)` }} />
+
+              {/* Mockup frame placeholder */}
+              <div className="absolute inset-5 rounded-xl border border-white/10 bg-white/[0.03] flex items-center justify-center">
+                <span className="text-3xl font-extrabold text-white/[0.07] select-none tracking-tighter text-center px-4">
+                  {cs.title}
+                </span>
               </div>
-              <h3 className="text-sm font-bold tracking-tight text-foreground leading-snug">
-                {cs.title}
-              </h3>
-              <p className="text-xs text-muted-foreground">{cs.year} · {cs.role}</p>
+
+              {/* Shipped badge */}
+              <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm text-neutral-600 text-xs font-semibold px-2.5 py-1 rounded-full border border-white/60">
+                shipped
+              </div>
             </div>
           </Link>
         ))}
-      </div>
-
-      {/* Mobile "View all" */}
-      <div className="mt-8 flex justify-center sm:hidden">
-        <Link
-          to="/projects"
-          className="inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors"
-        >
-          View all projects <ArrowRight size={13} />
-        </Link>
       </div>
     </section>
   )
