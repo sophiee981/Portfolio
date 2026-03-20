@@ -14,8 +14,9 @@
 4. [Border Radius](#4-border-radius)
 5. [Animations](#5-animations)
 6. [Components — Button](#6-components--button)
-7. [Custom Utilities](#7-custom-utilities)
-8. [Hero Background](#8-hero-background)
+7. [Components — ButtonGroup](#7-components--buttongroup)
+8. [Custom Utilities](#8-custom-utilities)
+9. [Hero Background](#9-hero-background)
 
 ---
 
@@ -328,7 +329,109 @@ button:not(:disabled),
 
 ---
 
-## 7. Custom Utilities
+## 7. Components — ButtonGroup
+
+**Source:** `src/components/ui/button-group.tsx`
+**Base:** shadcn/ui pattern — custom implementation
+**Install:** Already included in this project
+
+Groups related `<Button>` components together. Collapses inner border-radii and shared borders automatically so buttons appear as a single connected unit.
+
+### Import
+
+```tsx
+import { ButtonGroup } from '@/components/ui/button-group'
+import { Button }      from '@/components/ui/button'
+```
+
+### Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | Layout direction |
+| `aria-label` | `string` | — | Accessible label for the group |
+| `className` | `string` | — | Additional Tailwind classes |
+
+### Behavior
+
+- First child → removes right radius (horizontal) or bottom radius (vertical)
+- Last child → removes left radius (horizontal) or top radius (vertical)
+- Middle children → removes all radius
+- Non-first children → `-ml-px` / `-mt-px` to collapse shared borders (no double border)
+- Focused / hovered item → `z-10` so its border renders on top
+
+> **Use `variant="outline"`** for grouped buttons — it's the only variant with visible borders to collapse. `default`, `ghost`, `secondary` work too but without visible border joining.
+
+### Usage Examples
+
+```tsx
+{/* ── Basic horizontal group ── */}
+<ButtonGroup aria-label="Text formatting">
+  <Button variant="outline">Bold</Button>
+  <Button variant="outline">Italic</Button>
+  <Button variant="outline">Underline</Button>
+</ButtonGroup>
+
+{/* ── Icon button group ── */}
+<ButtonGroup aria-label="Text alignment">
+  <Button variant="outline" size="icon"><AlignLeft size={16} /></Button>
+  <Button variant="outline" size="icon"><AlignCenter size={16} /></Button>
+  <Button variant="outline" size="icon"><AlignRight size={16} /></Button>
+</ButtonGroup>
+
+{/* ── Vertical group ── */}
+<ButtonGroup orientation="vertical" aria-label="View options">
+  <Button variant="outline">List</Button>
+  <Button variant="outline">Grid</Button>
+  <Button variant="outline">Card</Button>
+</ButtonGroup>
+
+{/* ── Mixed sizes (sm) ── */}
+<ButtonGroup aria-label="Filter">
+  <Button variant="outline" size="sm">All</Button>
+  <Button variant="outline" size="sm">UI/UX</Button>
+  <Button variant="outline" size="sm">Branding</Button>
+  <Button variant="outline" size="sm">Motion</Button>
+</ButtonGroup>
+
+{/* ── With active state ── */}
+<ButtonGroup aria-label="Category filter">
+  <Button variant="default" size="sm">All</Button>       {/* active */}
+  <Button variant="outline" size="sm">UI/UX</Button>
+  <Button variant="outline" size="sm">Branding</Button>
+</ButtonGroup>
+
+{/* ── Split button: primary action + dropdown ── */}
+<ButtonGroup aria-label="Submit options">
+  <Button>Submit</Button>
+  <Button variant="outline" size="icon">
+    <ChevronDown size={14} />
+  </Button>
+</ButtonGroup>
+```
+
+### CSS classes applied automatically
+
+| Target | Horizontal | Vertical |
+|---|---|---|
+| `:first-child` | `rounded-r-none` | `rounded-b-none` |
+| `:last-child` | `rounded-l-none` | `rounded-t-none` |
+| `:not(:first):not(:last)` | `rounded-none` | `rounded-none` |
+| `:not(:first-child)` | `-ml-px` | `-mt-px` |
+| `:focus-visible`, `:hover` | `z-10` | `z-10` |
+
+### ButtonGroup vs ToggleGroup
+
+| | ButtonGroup | ToggleGroup |
+|---|---|---|
+| Purpose | Trigger actions | Toggle state on/off |
+| Selection | No selection state | Has pressed/active state |
+| Use case | Filter bar, split button | Align text, view switch |
+| Component | `<Button>` inside | `<ToggleGroupItem>` inside |
+
+---
+
+## 8. Custom Utilities
 
 Defined via `@utility` in `src/index.css`.
 
@@ -343,7 +446,7 @@ All 20 semantic text styles listed in [Typography section](#2-typography).
 
 ---
 
-## 8. Hero Background
+## 9. Hero Background
 
 Clone of Ezhil Arasan's portfolio style — dark teal mesh gradient.
 
